@@ -1,5 +1,94 @@
-@import "bootstrap/dist/css/bootstrap.min.css";
+body {
+  background-color: #218c4f;
+  font-family: sans-serif;
+}
 
-body{
-    background: white;
+.card {
+  width: 80px;
+  height: 120px;
+  border: 1px solid #333;
+  border-radius: 6px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  overflow: hidden;
+  font-size: 1.5rem;
+}
+
+.card.red {
+  color: red;
+}
+
+.card.black {
+  color: black;
+}
+
+.card.oculta {
+  background-color: white;
+  color: red;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.corner-top-left,
+.corner-bottom-right {
+  position: absolute;
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.corner-top-left {
+  top: 4px;
+  left: 6px;
+}
+
+.corner-bottom-right {
+  bottom: 4px;
+  right: 6px;
+  transform: rotate(180deg);
+}
+
+.card-value {
+  font-size: 1.8rem;
+}
+
+.tablero .col {
+  padding: 0;
+  min-width: 80px;
+}
+
+.tablero .card {
+  margin-top: -85px;
+}
+
+.tablero .card:first-child {
+  margin-top: 0;
+}
+
+#mazo, #descarte,
+#fundacion-♠, #fundacion-♣, #fundacion-♥, #fundacion-♦ {
+  width: 80px;
+  height: 120px;
+}
+
+#fundaciones .card.oculta {
+  color: #999;
+  font-size: 2rem;
+  justify-content: center;
+}
+
+#fundacion-♥ .card.oculta,
+#fundacion-♦ .card.oculta {
+  color: red;
+}
+
+#fundacion-♠ .card.oculta,
+#fundacion-♣ .card.oculta {
+  color: black;
 }
