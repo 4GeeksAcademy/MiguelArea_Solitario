@@ -1,3 +1,4 @@
+
 // Crear baraja
 const palos = ['♠', '♣', '♥', '♦'];
 const valores = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
@@ -77,7 +78,6 @@ function renderizarColumnas() {
       contenedor.appendChild(div);
     });
 
-    // Si la columna está vacía, añadir un hueco
     if (columna.length === 0) {
       const placeholder = document.createElement('div');
       placeholder.className = 'card placeholder';
@@ -86,22 +86,26 @@ function renderizarColumnas() {
     }
   });
 
-  // Mazo
   const mazoContainer = document.getElementById('mazo');
   const descarteContainer = document.getElementById('descarte');
   mazoContainer.innerHTML = '';
   descarteContainer.innerHTML = '';
 
-  if (mazo.length > 0) {
-    const cartaTapada = document.createElement('div');
-    cartaTapada.className = 'card oculta';
-    cartaTapada.addEventListener('click', sacarCartaDelMazo);
-    cartaTapada.style.backgroundImage = "url('imagen/reverso.png')";
-    cartaTapada.style.backgroundSize = "cover";
-    cartaTapada.style.backgroundPosition = "center";
-    cartaTapada.style.backgroundRepeat = "no-repeat";
-    mazoContainer.appendChild(cartaTapada);
-  }
+const cartaTapada = document.createElement('div');
+cartaTapada.className = mazo.length > 0 ? 'card oculta' : 'card mazo-vacio';
+cartaTapada.addEventListener('click', sacarCartaDelMazo);
+
+if (mazo.length > 0) {
+  cartaTapada.style.backgroundImage = "url('imagen/reverso.png')";
+  cartaTapada.style.backgroundSize = "cover";
+  cartaTapada.style.backgroundPosition = "center";
+  cartaTapada.style.backgroundRepeat = "no-repeat";
+} else {
+  cartaTapada.innerHTML = "↺";
+  cartaTapada.title = "Reciclar mazo";
+}
+
+mazoContainer.appendChild(cartaTapada);
 
   if (descarte.length > 0) {
     const carta = descarte[descarte.length - 1];
@@ -113,19 +117,13 @@ function renderizarColumnas() {
       <div class="corner-bottom-right">${carta.palo}</div>
     `;
     div.addEventListener('click', () => {
-      if (cartaSeleccionada === carta) {
-        cartaSeleccionada = null;
-        pilaSeleccionada = [];
-      } else {
-        cartaSeleccionada = carta;
-        pilaSeleccionada = [carta];
-      }
+      cartaSeleccionada = (cartaSeleccionada === carta) ? null : carta;
+      pilaSeleccionada = cartaSeleccionada ? [carta] : [];
       renderizarColumnas();
     });
     descarteContainer.appendChild(div);
   }
 
-  // Fundaciones
   for (const palo in fundaciones) {
     const fundacionContainer = document.getElementById(`fundacion-${palo}`);
     fundacionContainer.innerHTML = '';
@@ -144,8 +142,8 @@ function renderizarColumnas() {
       fundacionContainer.appendChild(div);
     } else {
       const empty = document.createElement('div');
-      empty.className = 'card oculta';
-      empty.innerHTML = palo;
+      empty.className = 'card fundacion-vacia';
+      empty.innerHTML = `<div class="fundacion-palo">${palo}</div>`;
       empty.addEventListener('click', () => manejarFundacionClick(palo));
       fundacionContainer.appendChild(empty);
     }
@@ -153,6 +151,9 @@ function renderizarColumnas() {
 
   verificarVictoria();
 }
+
+// ... (rest of the JS remains unchanged)
+
 
 function manejarFundacionClick(palo) {
   if (!cartaSeleccionada || pilaSeleccionada.length !== 1) return;
@@ -194,7 +195,6 @@ function manejarClickCarta(e) {
   const div = e.currentTarget;
   const colIndex = parseInt(div.dataset.columna);
   const cartaIndex = parseInt(div.dataset.index);
-
   const columna = columnas[colIndex];
   const carta = columna[cartaIndex];
   const esUltima = cartaIndex === columna.length - 1;
@@ -204,7 +204,6 @@ function manejarClickCarta(e) {
     cartaSeleccionada = null;
     pilaSeleccionada = [];
     renderizarColumnas();
-    prepararColumnasDestino();
     return;
   }
 
@@ -228,7 +227,6 @@ function manejarClickCarta(e) {
         cartaSeleccionada = null;
         pilaSeleccionada = [];
         renderizarColumnas();
-        prepararColumnasDestino();
         return;
       }
     }
@@ -248,27 +246,61 @@ function manejarClickCarta(e) {
 function prepararColumnasDestino() {
   columnas.forEach((_, index) => {
     const contenedor = document.getElementById(`columna-${index}`);
-    contenedor.onclick = function (e) {
-      if (e.target === contenedor && cartaSeleccionada && columnas[index].length === 0) {
-        if (pilaSeleccionada[0].valor === 'K') {
-          let origen = columnas.find(col => col.includes(cartaSeleccionada));
-          if (!origen) origen = descarte;
+    contenedor.onclick = function () {
+      if (cartaSeleccionada && columnas[index].length === 0 && pilaSeleccionada[0].valor === 'K') {
+        let origen = columnas.find(col => col.includes(cartaSeleccionada));
+        if (!origen) origen = descarte;
 
-          pilaSeleccionada.forEach(c => {
-            const idx = origen.indexOf(c);
-            if (idx > -1) origen.splice(idx, 1);
-            columnas[index].push(c);
-          });
+        pilaSeleccionada.forEach(c => {
+          const idx = origen.indexOf(c);
+          if (idx > -1) origen.splice(idx, 1);
+          columnas[index].push(c);
+        });
 
-          cartaSeleccionada = null;
-          pilaSeleccionada = [];
-          renderizarColumnas();
-        }
+        cartaSeleccionada = null;
+        pilaSeleccionada = [];
+        renderizarColumnas();
       }
     };
   });
 }
 
-// Iniciar juego
 renderizarColumnas();
 prepararColumnasDestino();
+
+function reiniciarJuego() {
+  baraja = [];
+
+  palos.forEach(palo => {
+    valores.forEach(valor => {
+      baraja.push({
+        valor,
+        palo,
+        color: (palo === '♥' || palo === '♦') ? 'red' : 'black',
+        visible: false
+      });
+    });
+  });
+
+  baraja = baraja.sort(() => Math.random() - 0.5);
+  mazo = [...baraja];
+  descarte = [];
+  cartaSeleccionada = null;
+  pilaSeleccionada = [];
+
+  for (let i = 0; i < 7; i++) columnas[i] = [];
+
+  for (let i = 0; i < 7; i++) {
+    for (let j = 0; j <= i; j++) {
+      const carta = mazo.pop();
+      carta.visible = (j === i);
+      columnas[i].push(carta);
+    }
+  }
+
+  for (const palo in fundaciones) fundaciones[palo] = [];
+
+  renderizarColumnas();
+}
+document.getElementById('reiniciarBtn').addEventListener('click', reiniciarJuego);
+

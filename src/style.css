@@ -104,7 +104,7 @@ body {
   margin-top: 50px;
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 40px;
 }
 
 /* Cada columna */
@@ -128,4 +128,33 @@ body {
   border: 2px dashed #bbb;
   color: transparent;
   box-shadow: none;
+}
+#tablero > div {
+  min-height: 130px;
+  width: 80px;
+  position: relative;
+}
+.fundacion-vacia {
+  background: #e0e0e0;
+  border: 2px dashed #999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fundacion-vacia .fundacion-palo {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
+}
+.card.mazo-vacio {
+  background-color:rgba(167, 235, 167, 0.114);
+  color: #444;
+  font-size: 2rem;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px dashed #aaa;
+  cursor: pointer;
 }
