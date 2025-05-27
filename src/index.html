@@ -9,40 +9,34 @@
 </head>
 <body>
 
-  <div class="container-fluid p-4">
-    
-    <!-- MAZO Y DESCARTE -->
-    <div class="d-flex gap-3 mb-3">
+<div class="container d-flex flex-column align-items-center">
+
+  <!-- MAZO, DESCARTE Y FUNDACIONES -->
+  <div class="d-flex justify-content-between align-items-start mb-4" style="width: 700px;">
+    <div class="d-flex gap-3">
       <div id="mazo"></div>
       <div id="descarte"></div>
     </div>
-
-    <!-- FUNDACIONES -->
-    <div class="d-flex justify-content-between align-items-start mb-3">
-  <div class="d-flex gap-3">
-    <div id="mazo"></div>
-    <div id="descarte"></div>
-  </div>
-  <div class="d-flex gap-3" id="fundaciones">
-    <div id="fundacion-♠" class="fundacion"></div>
-    <div id="fundacion-♣" class="fundacion"></div>
-    <div id="fundacion-♥" class="fundacion"></div>
-    <div id="fundacion-♦" class="fundacion"></div>
-  </div>
-</div>
-
-
-    <!-- COLUMNAS -->
-    <div class="row tablero justify-content-start">
-      <div class="col" id="columna-0"></div>
-      <div class="col" id="columna-1"></div>
-      <div class="col" id="columna-2"></div>
-      <div class="col" id="columna-3"></div>
-      <div class="col" id="columna-4"></div>
-      <div class="col" id="columna-5"></div>
-      <div class="col" id="columna-6"></div>
+    <div class="d-flex gap-3" id="fundaciones">
+      <div id="fundacion-♠" class="fundacion"></div>
+      <div id="fundacion-♣" class="fundacion"></div>
+      <div id="fundacion-♥" class="fundacion"></div>
+      <div id="fundacion-♦" class="fundacion"></div>
     </div>
   </div>
+
+  <!-- COLUMNAS -->
+  <div class="d-flex justify-content-center gap-2" id="tablero" style="width: 700px;">
+    <div id="columna-0"></div>
+    <div id="columna-1"></div>
+    <div id="columna-2"></div>
+    <div id="columna-3"></div>
+    <div id="columna-4"></div>
+    <div id="columna-5"></div>
+    <div id="columna-6"></div>
+  </div>
+
+</div>
 
   <script src="app.js"></script>
 </body>

@@ -1,24 +1,57 @@
+/* Fondo y base */
 body {
-  background-color: #218c4f;
+  background-color: #1b8a56;
+  margin: 0;
+  padding: 0;
   font-family: sans-serif;
 }
 
+/* Contenedor principal centrado con ancho limitado */
+.container {
+  max-width: 70vw;
+  margin: 0 auto;
+  padding-top: 40px;
+}
+
+/* Cartas generales */
 .card {
   width: 80px;
   height: 120px;
-  border: 1px solid #333;
+  border: 1px solid #000;
   border-radius: 6px;
   background-color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
   position: relative;
   display: flex;
-  align-items: center;
   justify-content: center;
-  font-weight: bold;
-  overflow: hidden;
-  font-size: 1.5rem;
+  align-items: center;
+  user-select: none;
 }
 
+/* Esquinas y valor central */
+.card .corner-top-left,
+.card .corner-bottom-right {
+  font-size: 1.2rem;
+  position: absolute;
+}
+
+.card .corner-top-left {
+  top: 4px;
+  left: 6px;
+}
+
+.card .corner-bottom-right {
+  bottom: 4px;
+  right: 6px;
+  transform: rotate(180deg);
+}
+
+.card .card-value {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+/* Colores */
 .card.red {
   color: red;
 }
@@ -27,62 +60,35 @@ body {
   color: black;
 }
 
+/* Cartas ocultas con imagen de reverso */
 .card.oculta {
-  background-color: white;
-  color: red;
-  font-size: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background-color: transparent;
+  background-image: url('imagen/reverso.png'); /* Asegúrate de que esta ruta es correcta */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: transparent;
 }
 
-.corner-top-left,
-.corner-bottom-right {
-  position: absolute;
-  font-size: 0.9rem;
-  line-height: 1;
-}
-
-.corner-top-left {
-  top: 4px;
-  left: 6px;
-}
-
-.corner-bottom-right {
-  bottom: 4px;
-  right: 6px;
-  transform: rotate(180deg);
-}
-
-.card-value {
-  font-size: 1.8rem;
-}
-
-.tablero .col {
-  padding: 0;
-  min-width: 80px;
-}
-
-.tablero .card {
-  margin-top: -85px;
-}
-
-.tablero .card:first-child {
-  margin-top: 0;
-}
-
+/* MAZO Y FUNDACIONES (espacios individuales) */
 #mazo, #descarte,
 #fundacion-♠, #fundacion-♣, #fundacion-♥, #fundacion-♦ {
   width: 80px;
   height: 120px;
 }
 
+/* Fundaciones vacías (sin carta) */
 #fundaciones .card.oculta {
-  color: #999;
+  background: rgba(167, 235, 167, 0.114);
+  color: #333;
   font-size: 2rem;
+  font-weight: bold;
+  display: flex;
   justify-content: center;
+  align-items: center;
 }
 
+/* Fundaciones: color por palo */
 #fundacion-♥ .card.oculta,
 #fundacion-♦ .card.oculta {
   color: red;
@@ -91,4 +97,35 @@ body {
 #fundacion-♠ .card.oculta,
 #fundacion-♣ .card.oculta {
   color: black;
+}
+
+/* TABLERO: columnas con solapamiento */
+#tablero {
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+/* Cada columna */
+#tablero > div {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Solapamiento entre cartas */
+#tablero .card {
+  margin-top: -85px;
+  z-index: 1;
+}
+
+#tablero .card:first-child {
+  margin-top: 0;
+}
+.card.placeholder {
+  background: rgba(167, 235, 167, 0.114);
+  border: 2px dashed #bbb;
+  color: transparent;
+  box-shadow: none;
 }

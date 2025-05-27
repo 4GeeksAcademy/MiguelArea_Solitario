@@ -1,14 +1,13 @@
 // Crear baraja
 const palos = ['♠', '♣', '♥', '♦'];
 const valores = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-
 let baraja = [];
 
 palos.forEach(palo => {
   valores.forEach(valor => {
     baraja.push({
-      valor: valor,
-      palo: palo,
+      valor,
+      palo,
       color: (palo === '♥' || palo === '♦') ? 'red' : 'black',
       visible: false
     });
@@ -16,7 +15,6 @@ palos.forEach(palo => {
 });
 
 baraja = baraja.sort(() => Math.random() - 0.5);
-
 const columnas = [[], [], [], [], [], [], []];
 const fundaciones = { '♠': [], '♣': [], '♥': [], '♦': [] };
 let mazo = [...baraja];
@@ -68,7 +66,7 @@ function renderizarColumnas() {
           <div class="corner-bottom-right">${carta.palo}</div>
         `;
       } else {
-        div.style.backgroundImage = "url('8ada4173-570b-46a4-ac16-a04a96ba2a16.png')";
+        div.style.backgroundImage = "url('imagen/reverso.png')";
         div.style.backgroundSize = "cover";
         div.style.backgroundPosition = "center";
         div.style.backgroundRepeat = "no-repeat";
@@ -78,11 +76,19 @@ function renderizarColumnas() {
       div.addEventListener('click', manejarClickCarta);
       contenedor.appendChild(div);
     });
+
+    // Si la columna está vacía, añadir un hueco
+    if (columna.length === 0) {
+      const placeholder = document.createElement('div');
+      placeholder.className = 'card placeholder';
+      placeholder.dataset.columna = index;
+      contenedor.appendChild(placeholder);
+    }
   });
 
+  // Mazo
   const mazoContainer = document.getElementById('mazo');
   const descarteContainer = document.getElementById('descarte');
-
   mazoContainer.innerHTML = '';
   descarteContainer.innerHTML = '';
 
@@ -90,11 +96,10 @@ function renderizarColumnas() {
     const cartaTapada = document.createElement('div');
     cartaTapada.className = 'card oculta';
     cartaTapada.addEventListener('click', sacarCartaDelMazo);
-    cartaTapada.style.backgroundImage = "url('8ada4173-570b-46a4-ac16-a04a96ba2a16.png')";
+    cartaTapada.style.backgroundImage = "url('imagen/reverso.png')";
     cartaTapada.style.backgroundSize = "cover";
     cartaTapada.style.backgroundPosition = "center";
     cartaTapada.style.backgroundRepeat = "no-repeat";
-    cartaTapada.innerHTML = '';
     mazoContainer.appendChild(cartaTapada);
   }
 
@@ -120,10 +125,12 @@ function renderizarColumnas() {
     descarteContainer.appendChild(div);
   }
 
+  // Fundaciones
   for (const palo in fundaciones) {
     const fundacionContainer = document.getElementById(`fundacion-${palo}`);
     fundacionContainer.innerHTML = '';
     const pila = fundaciones[palo];
+
     if (pila.length > 0) {
       const carta = pila[pila.length - 1];
       const div = document.createElement('div');
@@ -146,7 +153,7 @@ function renderizarColumnas() {
 
   verificarVictoria();
 }
-}
+
 function manejarFundacionClick(palo) {
   if (!cartaSeleccionada || pilaSeleccionada.length !== 1) return;
   const carta = cartaSeleccionada;
@@ -212,7 +219,6 @@ function manejarClickCarta(e) {
         if (!origen) origen = descarte;
 
         const destino = columnas[colIndex];
-
         pilaSeleccionada.forEach(c => {
           const idx = origen.indexOf(c);
           if (idx > -1) origen.splice(idx, 1);
@@ -263,6 +269,6 @@ function prepararColumnasDestino() {
   });
 }
 
-
+// Iniciar juego
 renderizarColumnas();
 prepararColumnasDestino();
