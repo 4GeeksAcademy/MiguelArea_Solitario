@@ -30,19 +30,34 @@ body {
 
 /* Esquinas y valor central */
 .card .corner-top-left,
-.card .corner-bottom-right {
+.card .corner-bottom-right,
+.card .corner-top-right,
+.card .corner-bottom-left {
   font-size: 1.2rem;
+  font-weight: bold;
   position: absolute;
+  z-index: 2;
 }
 
 .card .corner-top-left {
-  top: 4px;
-  left: 6px;
+  top: 5px;
+  left: 8px;
+}
+
+.card .corner-top-right {
+  top: 5px;
+  right: 8px;
+}
+
+.card .corner-bottom-left {
+  bottom: 5px;
+  left: 8px;
+  transform: rotate(180deg);
 }
 
 .card .corner-bottom-right {
-  bottom: 4px;
-  right: 6px;
+  bottom: 5px;
+  right: 8px;
   transform: rotate(180deg);
 }
 
@@ -63,7 +78,7 @@ body {
 /* Cartas ocultas con imagen de reverso */
 .card.oculta {
   background-color: transparent;
-  background-image: url('imagen/reverso.png'); /* Asegúrate de que esta ruta es correcta */
+  background-image: url('imagen/reverso.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -88,7 +103,6 @@ body {
   align-items: center;
 }
 
-/* Fundaciones: color por palo */
 #fundacion-♥ .card.oculta,
 #fundacion-♦ .card.oculta {
   color: red;
@@ -107,11 +121,12 @@ body {
   gap: 40px;
 }
 
-/* Cada columna */
 #tablero > div {
   display: flex;
   flex-direction: column;
   position: relative;
+  min-height: 130px;
+  width: 80px;
 }
 
 /* Solapamiento entre cartas */
@@ -123,17 +138,14 @@ body {
 #tablero .card:first-child {
   margin-top: 0;
 }
+
 .card.placeholder {
   background: rgba(167, 235, 167, 0.114);
   border: 2px dashed #bbb;
   color: transparent;
   box-shadow: none;
 }
-#tablero > div {
-  min-height: 130px;
-  width: 80px;
-  position: relative;
-}
+
 .fundacion-vacia {
   background: #e0e0e0;
   border: 2px dashed #999;
@@ -147,8 +159,9 @@ body {
   font-weight: bold;
   color: #333;
 }
+
 .card.mazo-vacio {
-  background-color:rgba(167, 235, 167, 0.114);
+  background-color: rgba(167, 235, 167, 0.114);
   color: #444;
   font-size: 2rem;
   font-weight: bold;
