@@ -1,9 +1,15 @@
-
-// Crear baraja
+// Variables globales
 const palos = ['♠', '♣', '♥', '♦'];
 const valores = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
 let baraja = [];
+let imagenReversoActual = 'imagen/llanerosolitario.png';
+const columnas = [[], [], [], [], [], [], []];
+const fundaciones = { '♠': [], '♣': [], '♥': [], '♦': [] };
+let mazo = [], descarte = [];
+let cartaSeleccionada = null;
+let pilaSeleccionada = [];
 
+// Crear baraja
 palos.forEach(palo => {
   valores.forEach(valor => {
     baraja.push({
@@ -16,10 +22,7 @@ palos.forEach(palo => {
 });
 
 baraja = baraja.sort(() => Math.random() - 0.5);
-const columnas = [[], [], [], [], [], [], []];
-const fundaciones = { '♠': [], '♣': [], '♥': [], '♦': [] };
-let mazo = [...baraja];
-let descarte = [];
+mazo = [...baraja];
 
 // Repartir cartas
 for (let i = 0; i < 7; i++) {
@@ -30,22 +33,12 @@ for (let i = 0; i < 7; i++) {
   }
 }
 
-let cartaSeleccionada = null;
-let pilaSeleccionada = [];
-
 function valorANumero(valor) {
   if (valor === 'A') return 1;
   if (valor === 'J') return 11;
   if (valor === 'Q') return 12;
   if (valor === 'K') return 13;
   return parseInt(valor);
-}
-
-function verificarVictoria() {
-  const totalFundadas = Object.values(fundaciones).reduce((acc, pila) => acc + pila.length, 0);
-  if (totalFundadas === 52) {
-    setTimeout(() => alert('¡Felicidades! Has ganado el Solitario 🏆'), 100);
-  }
 }
 
 function renderizarColumnas() {
@@ -63,11 +56,13 @@ function renderizarColumnas() {
       if (carta.visible) {
         div.innerHTML = `
           <div class="corner-top-left">${carta.palo}</div>
-          <div class="card-value">${carta.valor}</div>
+          <div class="corner-top-right">${carta.valor}</div>
+          <div class="corner-bottom-left">${carta.valor}</div>
           <div class="corner-bottom-right">${carta.palo}</div>
+          <div class="card-value">${carta.valor}</div>
         `;
       } else {
-        div.style.backgroundImage = "url('imagen/reverso.png')";
+        div.style.backgroundImage = `url('${imagenReversoActual}')`;
         div.style.backgroundSize = "cover";
         div.style.backgroundPosition = "center";
         div.style.backgroundRepeat = "no-repeat";
@@ -86,35 +81,37 @@ function renderizarColumnas() {
     }
   });
 
+  // MAZO
   const mazoContainer = document.getElementById('mazo');
-  const descarteContainer = document.getElementById('descarte');
   mazoContainer.innerHTML = '';
+  const cartaTapada = document.createElement('div');
+  cartaTapada.className = mazo.length > 0 ? 'card oculta' : 'card mazo-vacio';
+  cartaTapada.addEventListener('click', sacarCartaDelMazo);
+
+  if (mazo.length > 0) {
+    cartaTapada.style.backgroundImage = `url('${imagenReversoActual}')`;
+    cartaTapada.style.backgroundSize = "cover";
+    cartaTapada.style.backgroundPosition = "center";
+    cartaTapada.style.backgroundRepeat = "no-repeat";
+  } else {
+    cartaTapada.innerHTML = "↺";
+    cartaTapada.title = "Reciclar mazo";
+  }
+  mazoContainer.appendChild(cartaTapada);
+
+  // DESCARTE
+  const descarteContainer = document.getElementById('descarte');
   descarteContainer.innerHTML = '';
-
-const cartaTapada = document.createElement('div');
-cartaTapada.className = mazo.length > 0 ? 'card oculta' : 'card mazo-vacio';
-cartaTapada.addEventListener('click', sacarCartaDelMazo);
-
-if (mazo.length > 0) {
-  cartaTapada.style.backgroundImage = "url('imagen/reverso.png')";
-  cartaTapada.style.backgroundSize = "cover";
-  cartaTapada.style.backgroundPosition = "center";
-  cartaTapada.style.backgroundRepeat = "no-repeat";
-} else {
-  cartaTapada.innerHTML = "↺";
-  cartaTapada.title = "Reciclar mazo";
-}
-
-mazoContainer.appendChild(cartaTapada);
-
   if (descarte.length > 0) {
     const carta = descarte[descarte.length - 1];
     const div = document.createElement('div');
     div.className = `card ${carta.color === 'red' ? 'red' : 'black'}`;
     div.innerHTML = `
       <div class="corner-top-left">${carta.palo}</div>
+      <div class="corner-top-right">${carta.valor}</div>
+      <div class="corner-bottom-left">${carta.palo}</div>
+      <div class="corner-bottom-right">${carta.valor}</div>
       <div class="card-value">${carta.valor}</div>
-      <div class="corner-bottom-right">${carta.palo}</div>
     `;
     div.addEventListener('click', () => {
       cartaSeleccionada = (cartaSeleccionada === carta) ? null : carta;
@@ -124,6 +121,7 @@ mazoContainer.appendChild(cartaTapada);
     descarteContainer.appendChild(div);
   }
 
+  // FUNDACIONES
   for (const palo in fundaciones) {
     const fundacionContainer = document.getElementById(`fundacion-${palo}`);
     fundacionContainer.innerHTML = '';
@@ -135,8 +133,10 @@ mazoContainer.appendChild(cartaTapada);
       div.className = `card ${carta.color === 'red' ? 'red' : 'black'}`;
       div.innerHTML = `
         <div class="corner-top-left">${carta.palo}</div>
+        <div class="corner-top-right">${carta.valor}</div>
+        <div class="corner-bottom-left">${carta.palo}</div>
+        <div class="corner-bottom-right">${carta.valor}</div>
         <div class="card-value">${carta.valor}</div>
-        <div class="corner-bottom-right">${carta.palo}</div>
       `;
       div.addEventListener('click', () => manejarFundacionClick(palo));
       fundacionContainer.appendChild(div);
@@ -152,28 +152,11 @@ mazoContainer.appendChild(cartaTapada);
   verificarVictoria();
 }
 
-// ... (rest of the JS remains unchanged)
-
-
-function manejarFundacionClick(palo) {
-  if (!cartaSeleccionada || pilaSeleccionada.length !== 1) return;
-  const carta = cartaSeleccionada;
-  if (carta.palo !== palo) return;
-
-  const fundacion = fundaciones[palo];
-  const valorEsperado = valorANumero(fundacion.length === 0 ? 'A' : fundacion[fundacion.length - 1].valor) + (fundacion.length === 0 ? 0 : 1);
-  if (valorANumero(carta.valor) !== valorEsperado) return;
-
-  let origen = columnas.find(col => col.includes(carta));
-  if (!origen) origen = descarte;
-
-  const idx = origen.indexOf(carta);
-  if (idx > -1) origen.splice(idx, 1);
-  fundacion.push(carta);
-
-  cartaSeleccionada = null;
-  pilaSeleccionada = [];
-  renderizarColumnas();
+function verificarVictoria() {
+  const totalFundadas = Object.values(fundaciones).reduce((acc, pila) => acc + pila.length, 0);
+  if (totalFundadas === 52) {
+    setTimeout(() => alert('¡Felicidades! Has ganado el Solitario 🏆'), 100);
+  }
 }
 
 function sacarCartaDelMazo() {
@@ -243,64 +226,33 @@ function manejarClickCarta(e) {
   }
 }
 
-function prepararColumnasDestino() {
-  columnas.forEach((_, index) => {
-    const contenedor = document.getElementById(`columna-${index}`);
-    contenedor.onclick = function () {
-      if (cartaSeleccionada && columnas[index].length === 0 && pilaSeleccionada[0].valor === 'K') {
-        let origen = columnas.find(col => col.includes(cartaSeleccionada));
-        if (!origen) origen = descarte;
+function manejarFundacionClick(palo) {
+  if (!cartaSeleccionada || pilaSeleccionada.length !== 1) return;
+  const carta = cartaSeleccionada;
+  if (carta.palo !== palo) return;
 
-        pilaSeleccionada.forEach(c => {
-          const idx = origen.indexOf(c);
-          if (idx > -1) origen.splice(idx, 1);
-          columnas[index].push(c);
-        });
+  const fundacion = fundaciones[palo];
+  const valorEsperado = valorANumero(fundacion.length === 0 ? 'A' : fundacion[fundacion.length - 1].valor) + (fundacion.length === 0 ? 0 : 1);
+  if (valorANumero(carta.valor) !== valorEsperado) return;
 
-        cartaSeleccionada = null;
-        pilaSeleccionada = [];
-        renderizarColumnas();
-      }
-    };
-  });
-}
+  let origen = columnas.find(col => col.includes(carta));
+  if (!origen) origen = descarte;
 
-renderizarColumnas();
-prepararColumnasDestino();
+  const idx = origen.indexOf(carta);
+  if (idx > -1) origen.splice(idx, 1);
+  fundacion.push(carta);
 
-function reiniciarJuego() {
-  baraja = [];
-
-  palos.forEach(palo => {
-    valores.forEach(valor => {
-      baraja.push({
-        valor,
-        palo,
-        color: (palo === '♥' || palo === '♦') ? 'red' : 'black',
-        visible: false
-      });
-    });
-  });
-
-  baraja = baraja.sort(() => Math.random() - 0.5);
-  mazo = [...baraja];
-  descarte = [];
   cartaSeleccionada = null;
   pilaSeleccionada = [];
-
-  for (let i = 0; i < 7; i++) columnas[i] = [];
-
-  for (let i = 0; i < 7; i++) {
-    for (let j = 0; j <= i; j++) {
-      const carta = mazo.pop();
-      carta.visible = (j === i);
-      columnas[i].push(carta);
-    }
-  }
-
-  for (const palo in fundaciones) fundaciones[palo] = [];
-
   renderizarColumnas();
 }
-document.getElementById('reiniciarBtn').addEventListener('click', reiniciarJuego);
 
+document.getElementById('reiniciarBtn').addEventListener('click', () => location.reload());
+
+const reversoSelect = document.getElementById('reversoSelect');
+reversoSelect.addEventListener('change', (e) => {
+  imagenReversoActual = `imagen/${e.target.value}`;
+  renderizarColumnas();
+});
+
+renderizarColumnas();
