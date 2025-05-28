@@ -1,4 +1,4 @@
-// Variables globales
+
 const palos = ['♠', '♣', '♥', '♦'];
 const valores = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
 let baraja = [];
@@ -9,7 +9,7 @@ let mazo = [], descarte = [];
 let cartaSeleccionada = null;
 let pilaSeleccionada = [];
 
-// Crear baraja
+
 palos.forEach(palo => {
   valores.forEach(valor => {
     baraja.push({
@@ -24,7 +24,7 @@ palos.forEach(palo => {
 baraja = baraja.sort(() => Math.random() - 0.5);
 mazo = [...baraja];
 
-// Repartir cartas
+
 for (let i = 0; i < 7; i++) {
   for (let j = 0; j <= i; j++) {
     const carta = mazo.pop();
@@ -81,7 +81,7 @@ function renderizarColumnas() {
     }
   });
 
-  // MAZO
+  
   const mazoContainer = document.getElementById('mazo');
   mazoContainer.innerHTML = '';
   const cartaTapada = document.createElement('div');
@@ -99,7 +99,7 @@ function renderizarColumnas() {
   }
   mazoContainer.appendChild(cartaTapada);
 
-  // DESCARTE
+  
   const descarteContainer = document.getElementById('descarte');
   descarteContainer.innerHTML = '';
   if (descarte.length > 0) {
@@ -121,7 +121,7 @@ function renderizarColumnas() {
     descarteContainer.appendChild(div);
   }
 
-  // FUNDACIONES
+ 
   for (const palo in fundaciones) {
     const fundacionContainer = document.getElementById(`fundacion-${palo}`);
     fundacionContainer.innerHTML = '';

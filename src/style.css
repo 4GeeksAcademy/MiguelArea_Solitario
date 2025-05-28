@@ -1,4 +1,4 @@
-/* Fondo y base */
+
 body {
   background-color: #1b8a56;
   margin: 0;
@@ -6,14 +6,13 @@ body {
   font-family: sans-serif;
 }
 
-/* Contenedor principal centrado con ancho limitado */
 .container {
   max-width: 70vw;
   margin: 0 auto;
   padding-top: 40px;
 }
 
-/* Cartas generales */
+
 .card {
   width: 80px;
   height: 120px;
@@ -28,7 +27,7 @@ body {
   user-select: none;
 }
 
-/* Esquinas y valor central */
+
 .card .corner-top-left,
 .card .corner-bottom-right,
 .card .corner-top-right,
@@ -75,7 +74,7 @@ body {
   color: black;
 }
 
-/* Cartas ocultas con imagen de reverso */
+
 .card.oculta {
   background-color: transparent;
   background-image: url('imagen/reverso.png');
@@ -85,14 +84,14 @@ body {
   color: transparent;
 }
 
-/* MAZO Y FUNDACIONES (espacios individuales) */
+
 #mazo, #descarte,
 #fundacion-♠, #fundacion-♣, #fundacion-♥, #fundacion-♦ {
   width: 80px;
   height: 120px;
 }
 
-/* Fundaciones vacías (sin carta) */
+
 #fundaciones .card.oculta {
   background: rgba(167, 235, 167, 0.114);
   color: #333;
@@ -113,7 +112,7 @@ body {
   color: black;
 }
 
-/* TABLERO: columnas con solapamiento */
+
 #tablero {
   margin-top: 50px;
   display: flex;
@@ -129,7 +128,7 @@ body {
   width: 80px;
 }
 
-/* Solapamiento entre cartas */
+
 #tablero .card {
   margin-top: -85px;
   z-index: 1;
